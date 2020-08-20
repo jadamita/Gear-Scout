@@ -3,7 +3,6 @@ const cheerio = require('cheerio');
 
 function getProductName(htmlBody) {
     try {
-        var productName;
         var isSimpleFormat = htmlBody('#product_addtocart_form > h1').length > 0;
         if (isSimpleFormat) {
             return htmlBody('#product_addtocart_form > h1').text();
@@ -23,10 +22,11 @@ function getProductName(htmlBody) {
         const $ = cheerio.load(siteReq.body);
 
         var productName = await getProductName($);
+        var productAvailale = $('.availability').text().indexOf('Out of stock') == -1;
         var singleProduct = $('.data-table.grouped-items-table').length == 0;
         var productPrice = $('.price-box').text().trim();
 
-        console.log(`Product Name: ${productName}\nSingle product: ${singleProduct}\nProduct Price: ${productPrice}`);
+        console.log(`Product Name: ${productName}\nSingle product: ${singleProduct}\nProduct Available?: ${productAvailale}\nProduct Price: ${productPrice}`);
 
     } catch (err) {
         console.error(`[ERROR] ${err.message}`)
