@@ -1,0 +1,16 @@
+{
+  "name": "gear-scout",
+  "version": "0.1.0",
+  "description": "A tool to get notified when gym equipment gets re-stocked",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "Joseph Adamita",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "got": "^11.5.2"
+  }
+}
