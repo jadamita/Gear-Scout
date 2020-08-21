@@ -1,5 +1,6 @@
 const got = require('got');
 const cheerio = require('cheerio');
+const schedule = require('node-schedule');
 
 function getProductName(htmlBody) {
     try {
@@ -14,11 +15,9 @@ function getProductName(htmlBody) {
     }
 }
 
-(async () => {
-    console.log('GearScout 0.1.0 - Joseph Adamita\n');
-
+async function checkUrl(url) {
     try {
-        const siteReq = await got('https://www.repfitness.com/bars-plates/bar-and-plate-packages/basic-olympic-iron-weight-set');
+        const siteReq = await got(url);
         const $ = cheerio.load(siteReq.body);
 
         var productName = await getProductName($);
@@ -26,9 +25,27 @@ function getProductName(htmlBody) {
         var singleProduct = $('.data-table.grouped-items-table').length == 0;
         var productPrice = $('.price-box').text().trim();
 
-        console.log(`Product Name: ${productName}\nSingle product: ${singleProduct}\nProduct Available?: ${productAvailale}\nProduct Price: ${productPrice}`);
+        var currentTime = new Date();
+        var timeString = currentTime.toLocaleString();
+
+        console.log(`[${timeString}] - ${productName} - ${productPrice} - Available: [${(productAvailale == true ? '✔' : '❌')}]`);
 
     } catch (err) {
         console.error(`[ERROR] ${err.message}`)
     }
+}
+
+(async () => {
+    console.log('GearScout 0.1.0 - Joseph Adamita\n=============================\n\nStarting product scouting jobs...');
+
+    var checkJob = schedule.scheduleJob('*/30 * * * * *', function(){
+        checkUrl('https://www.repfitness.com/bars-plates/bar-and-plate-packages/basic-olympic-iron-weight-set');
+    });
 })();
+
+
+[`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `uncaughtException`, `SIGTERM`].forEach((eventType) => {
+    process.on(eventType, () => {
+        console.log(1);
+    });
+});
