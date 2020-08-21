@@ -17,6 +17,7 @@ function getProductName(htmlBody) {
 
 async function checkUrl(url) {
     try {
+        callCount++;
         const siteReq = await got(url);
         const $ = cheerio.load(siteReq.body);
 
@@ -35,6 +36,8 @@ async function checkUrl(url) {
     }
 }
 
+var callCount = 0;
+
 (async () => {
     console.log('GearScout 0.1.0 - Joseph Adamita\n=============================\n\nStarting product scouting jobs...');
 
@@ -46,6 +49,6 @@ async function checkUrl(url) {
 
 [`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `uncaughtException`, `SIGTERM`].forEach((eventType) => {
     process.on(eventType, () => {
-        console.log(1);
+        console.log(`\n=============================\n           RESULTS          \n=============================\nJobs Ran: ${callCount}\n=============================`);
     });
 });
